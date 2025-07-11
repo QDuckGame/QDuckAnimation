@@ -1,0 +1,15 @@
+{
+  "name": "com.qduck.aniamtion",
+  "version": "0.0.1",
+  "displayName": "QDuckAniamtion",
+  "description": "This is an example package",
+  "documentationUrl": "https://github.com/QDuckGame/QDuckUI",
+  "changelogUrl": "https://github.com/QDuckGame/QDuckUI",
+  "licensesUrl": "https://github.com/QDuckGame/QDuckUI",
+  "author": {
+    "name": "zlu",
+    "email": "",
+    "url": "https://github.com/QDuckGame"
+  }
+  
+}
