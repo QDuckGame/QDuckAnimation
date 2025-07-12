@@ -11,5 +11,7 @@ namespace QDuck.Animation
     public class AnimProSet : ScriptableObject
     {
         public AnimAvatarLayerInfo[] LayerInfos;
+        
+        
     }
 }

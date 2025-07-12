@@ -5,17 +5,19 @@ using UnityEngine;
 namespace QDuck.Animation
 {
     [Serializable]
-    public class AnimAvatarLayerInfo : AnimLayerInfo
+    public class AnimAvatarLayerInfo:AnimLayerInfo
     {
         public AvatarMask Mask;
         public bool IsAdditive;
         public float Weight;
     }
 
+    
     [Serializable]
-    public class AnimLayerInfo : IAnimInfo
+    public class AnimLayerInfo :IAnimInfo
     {
         public string Name;
+        [AnimInfoList]
         [SerializeReference] public List<AnimInfo> Animations;
 
         public AnimPlayableBehaviour CreateBehaviour(AnimContext context)
@@ -25,7 +27,6 @@ namespace QDuck.Animation
             {
                 layer.AddInput(context, animation);
             }
-
             return layer;
         }
     }

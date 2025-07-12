@@ -7,10 +7,16 @@ using UnityEngine.Serialization;
 namespace QDuck.Animation
 {
     [Serializable]
+    public class AnimInfoListWrapper
+    {
+        [AnimInfoList]
+        [SerializeReference] public List<AnimInfo> Animations;
+    }
+    
+    [Serializable]
     public class AnimInfo : IAnimInfo
     {
         public string Name;
-
         public virtual AnimPlayableBehaviour CreateBehaviour(AnimContext context)
         {
             Debug.LogError("CreateBehaviour not implemented for " + GetType().Name);
