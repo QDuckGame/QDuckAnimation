@@ -50,7 +50,7 @@ namespace QDuck.Animation
             serializedObject.Update();
             
             EditorGUILayout.Space();
-            layerFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(layerFoldout, "Layer Settings");
+            layerFoldout = EditorGUILayout.Foldout(layerFoldout, "Layer Settings", EditorStyles.foldoutHeader);
             if (layerFoldout)
             {
                 EditorGUI.indentLevel++;
@@ -91,10 +91,10 @@ namespace QDuck.Animation
                     }
                     EditorGUILayout.EndHorizontal();
                     
-                    // 绘制具体属性
+                    // 绘制具体属性 - 使用自定义方法避免嵌套折叠
                     if (elementType != null)
                     {
-                        EditorGUILayout.PropertyField(elementProp, true);
+                        DrawAnimationProperties(elementProp);
                     }
                     else
                     {
@@ -113,7 +113,6 @@ namespace QDuck.Animation
                 
                 EditorGUI.indentLevel--;
             }
-            EditorGUILayout.EndFoldoutHeaderGroup();
             
             serializedObject.ApplyModifiedProperties();
         }
@@ -163,6 +162,67 @@ namespace QDuck.Animation
             string className = typeName.Substring(splitIndex + 1);
             
             return Type.GetType($"{className}, {assemblyName}");
+        }
+        
+        // 新增方法：手动绘制动画属性
+        private void DrawAnimationProperties(SerializedProperty prop)
+        {
+            SerializedProperty iterator = prop.Copy();
+            SerializedProperty end = prop.GetEndProperty();
+            bool enterChildren = true;
+            
+            while (iterator.NextVisible(enterChildren) && !SerializedProperty.EqualContents(iterator, end))
+            {
+                // 特殊处理数组属性（避免自动折叠头）
+                if (iterator.isArray && iterator.propertyType == SerializedPropertyType.Generic)
+                {
+                    DrawCustomArrayField(iterator);
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(iterator, true);
+                }
+                enterChildren = false;
+            }
+        }
+
+        // 新增方法：自定义数组绘制（无折叠头）
+        private void DrawCustomArrayField(SerializedProperty arrayProp)
+        {
+            int arraySize = arrayProp.arraySize;
+            EditorGUILayout.LabelField(arrayProp.displayName, EditorStyles.boldLabel);
+            
+            // 绘制数组大小控制
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Size", GUILayout.Width(50));
+            int newSize = EditorGUILayout.IntField(arraySize);
+            if (newSize != arraySize)
+            {
+                arrayProp.arraySize = newSize;
+            }
+            EditorGUILayout.EndHorizontal();
+
+            // 绘制数组元素
+            EditorGUI.indentLevel++;
+            for (int i = 0; i < arrayProp.arraySize; i++)
+            {
+                EditorGUILayout.BeginVertical("Box");
+                SerializedProperty element = arrayProp.GetArrayElementAtIndex(i);
+                
+                // 绘制元素属性
+                SerializedProperty child = element.Copy();
+                SerializedProperty end = element.GetEndProperty();
+                bool enterChildren = true;
+                
+                while (child.NextVisible(enterChildren) && !SerializedProperty.EqualContents(child, end))
+                {
+                    EditorGUILayout.PropertyField(child, true);
+                    enterChildren = false;
+                }
+                
+                EditorGUILayout.EndVertical();
+            }
+            EditorGUI.indentLevel--;
         }
     }
 }
