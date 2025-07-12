@@ -9,7 +9,7 @@ namespace QDuck.Animation
 {
     public class AnimLite : Anim
     {
-        [SerializeField] private AnimConfigWrapper _configWrapper = new AnimConfigWrapper();
+        [SerializeField] private AnimLiteSet _scriptableConfig;
         private AnimLayer _animLayer;
 
         private void Awake()
@@ -18,7 +18,7 @@ namespace QDuck.Animation
             _context = new AnimContext(_animator);
             _graph = _context.Graph;
 
-            var layerInfo = _configWrapper.GetConfig();
+            var layerInfo = _scriptableConfig.LayerInfo;
             if (layerInfo == null)
             {
                 Debug.LogError("AnimLayerInfo configuration is missing!");
@@ -38,8 +38,7 @@ namespace QDuck.Animation
         {
 
         }
-
-
+        
         public override void Play(string animationName, int layerIndex = 0)
         {
             if (_graph.IsValid() && _animLayer != null)
@@ -47,14 +46,6 @@ namespace QDuck.Animation
                 _animLayer.TransitionTo(animationName);
             }
         }
-
-        // 编辑器辅助方法（可选）
-#if UNITY_EDITOR
-        public void SwitchConfigType(AnimConfigType newType)
-        {
-            _configWrapper.configType = newType;
-        }
-#endif
 
     }
 }

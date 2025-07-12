@@ -9,16 +9,15 @@ namespace QDuck.Animation
     {
         public AvatarMask Mask;
         public bool IsAdditive;
-        public float Weight;
+        public float Weight = 1.0f; // 添加默认值
     }
-
     
     [Serializable]
     public class AnimLayerInfo :IAnimInfo
     {
         public string Name;
-        [AnimInfoList]
-        [SerializeReference] public List<AnimInfo> Animations;
+        [SerializeReference] 
+        public List<AnimInfo> Animations = new List<AnimInfo>(); // 初始化列表
 
         public AnimPlayableBehaviour CreateBehaviour(AnimContext context)
         {

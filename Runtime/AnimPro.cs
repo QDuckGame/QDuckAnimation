@@ -8,7 +8,7 @@ namespace QDuck.Animation
 {
     public class AnimPro : Anim
     {
-        [SerializeField] private AnimProConfigWrapper _configWrapper = new AnimProConfigWrapper();
+        [SerializeField] private AnimProSet _scriptableConfig;
 
         private AnimationLayerMixerPlayable _layerMixerPlayable;
         private List<AnimLayer> _layers = new List<AnimLayer>();
@@ -18,7 +18,7 @@ namespace QDuck.Animation
             _animator = GetComponent<Animator>();
             _context = new AnimContext(_animator);
             _graph = _context.Graph;
-            var layerInfos = _configWrapper.GetLayers();
+            var layerInfos = _scriptableConfig.LayerInfos;
             if (layerInfos == null || layerInfos.Length == 0)
             {
                 Debug.LogError("Animation layers configuration is missing!");
@@ -72,13 +72,7 @@ namespace QDuck.Animation
                 layer.StopTarget(animationName);
             }
         }
-
-#if UNITY_EDITOR
-        public void SwitchConfigType(AnimConfigType newType)
-        {
-            _configWrapper.configType = newType;
-        }
-#endif
+        
 
     }
 }

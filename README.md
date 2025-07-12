@@ -5,12 +5,9 @@ Based on Unity PlayableApi
 
 ### 挂载 AnimPro/AnimLite
 
-![image-20250711185539443](Images/image-20250711185539443.png)
+![image-20250712161736340](Images/image-20250712161736340.png)
 
-- ConfigType
-  - Scriptable Object 模式 创建ScriptableObject配置文件进行配置（方便配置文件的复用）
-  - Inline 模式 直接在预制体上配置类似于Animation的配置，适合简单动画配置
-- AnimProSetAsset/AnimLiteSetAsset 将创建的ScriptableObject配置文件，拖入到该选项
+- AnimProSetAsset/AnimLiteSetAsset 将创建的ScriptableConfig配置文件，拖入到该选项
 - IsImmediatePlay 是否立即播放，勾选后物体显示后会立即显示DefaultAnimationName的动画
 - DefaultAnimationName 默认动画名
 
