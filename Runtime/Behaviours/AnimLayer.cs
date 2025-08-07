@@ -31,7 +31,6 @@ namespace QDuck.Animation
             m_targetIndex = -1;
             m_animMixer.SetTime(0f);
             m_declineIndexs = new List<int>();
-
         }
 
         public override void OnBehaviourPlay(Playable playable, FrameData info)
@@ -52,6 +51,7 @@ namespace QDuck.Animation
         {
             AnimPlayableBehaviour behaviour = animaitonInfo.CreateBehaviour(context);
             int index = AddInput(behaviour.Playable);
+            m_animMixer.SetInputWeight(index, 0f);
             m_childBehaviours.Add(behaviour);
         }
 
@@ -117,12 +117,43 @@ namespace QDuck.Animation
             {
                 if (m_childBehaviours[i].name == targetName)
                 {
+                    // 确保首次播放正确初始化 ===
+                    if (m_currentIndex < 0)
+                    {
+                        m_currentIndex = i;
+                        SetWeight(i, 1f);
+                        // 确保动画从起始状态开始
+                        ResetAnimationState(i);
+                        return;
+                    }
+                    
+                    // 避免重复切换到相同动画
+                    if (i == m_currentIndex && !m_isTransition) 
+                        return;
+                    
+                    // 确保目标动画已准备好 ===
+                    if (m_targetIndex != i)
+                    {
+                        ResetAnimationState(i);
+                    }
+                    
                     TransitionTo(i);
                     return;
                 }
             }
 
             Debug.LogWarning($"AnimationLayer: Target animation '{targetName}' not found.");
+        }
+        
+        private void ResetAnimationState(int index)
+        {
+            var playable = m_animMixer.GetInput(index);
+            playable.SetTime(0);
+            playable.Play();
+            
+            // 调用子行为的重置逻辑
+            var behaviour = GetChildBehaviour(index);
+            behaviour?.ResetToStart();
         }
 
         public void TransitionTo(int target)

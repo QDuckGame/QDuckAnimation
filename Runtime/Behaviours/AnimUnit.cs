@@ -28,6 +28,7 @@ namespace QDuck.Animation
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
             base.OnBehaviourPlay(playable, info);
+            m_anim.SetTime(0f);
             m_anim.SetSpeed(m_info.Speed);
             m_anim.Play();
         }
@@ -37,8 +38,13 @@ namespace QDuck.Animation
         {
             base.DoBehaviourStop(playable);
             playable.Pause();
-            this.m_anim.SetTime(0);
-            
+            this.m_anim.SetTime(0f);
+        }
+
+        public override void ResetToStart()
+        {
+            base.ResetToStart();
+            m_anim.SetTime(0);
         }
 
         public override void PrepareFrame(Playable playable, FrameData info)
@@ -60,7 +66,9 @@ namespace QDuck.Animation
             var behaviour = ((ScriptPlayable<AnimUnit>)playable).GetBehaviour();
             behaviour.m_context = context;
             behaviour.m_info = info;
+            behaviour.m_isLoop = info.Loop;
             behaviour.m_anim = AnimationClipPlayable.Create(behaviour.m_graph, info.Clip);
+            behaviour.m_anim.SetTime(0f);
             playable.AddInput(behaviour.m_anim, 0, 1);
             behaviour.name = info.Name;
             return behaviour;

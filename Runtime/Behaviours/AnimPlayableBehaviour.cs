@@ -41,6 +41,13 @@ namespace QDuck.Animation
         {
             return 0;
         }
+        public virtual void ResetToStart()
+        {
+            if (Playable.IsValid())
+            {
+                Playable.SetTime(0);
+            }
+        }
 
     }
 }

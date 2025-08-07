@@ -130,7 +130,21 @@ namespace QDuck.Animation
         
             return behaviour;
         }
-    
 
+        public override void ResetToStart()
+        {
+            base.ResetToStart();
+            if (m_mixer.IsValid())
+            {
+                for (int i = 0; i < m_clipCount; i++)
+                {
+                    var input = m_mixer.GetInput(i);
+                    if (input.IsValid())
+                    {
+                        input.SetTime(0);
+                    }
+                }
+            }
+        }
     }
 }
